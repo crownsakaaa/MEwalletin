@@ -21,11 +21,68 @@ button{cursor:pointer;border:0}
 .logo b{color:var(--lime)}
 /* login */
 #login{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
-.hero{padding:48px;display:flex;flex-direction:column;justify-content:space-between;background:radial-gradient(120% 90% at 20% 100%,rgba(198,244,50,.28),transparent 60%),var(--panel)}
-.hero h1{font-size:clamp(32px,4vw,56px);line-height:1.05;margin:0 0 14px;max-width:11ch}
-.hero p{color:var(--mute);max-width:36ch;margin:0}
-.mini{margin-top:36px;width:min(340px,100%);aspect-ratio:1.6;border-radius:22px;background:linear-gradient(135deg,#2fd06a,#0f6b32);padding:20px;display:flex;flex-direction:column;justify-content:space-between;color:#fff;transform:rotate(-4deg);box-shadow:0 20px 50px rgba(0,0,0,.4)}
-.mini small{opacity:.8}.mini strong{font-size:28px}
+.hero{padding:52px;display:flex;flex-direction:column;gap:0;background:radial-gradient(110% 80% at 10% 110%,rgba(198,244,50,.22),transparent 55%),var(--panel);position:relative;overflow:hidden}
+.hero-text{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:480px}
+.hero h1{font-size:clamp(36px,3.8vw,58px);line-height:1.05;margin:0 0 14px;letter-spacing:-.03em}
+.hero p{color:var(--mute);max-width:38ch;margin:0 0 44px;font-size:16px;line-height:1.6}
+.hero-stats{display:flex;gap:28px;margin-bottom:56px}
+.hero-stat small{display:block;color:var(--mute);font-size:12px;margin-bottom:4px}
+.hero-stat b{font-size:20px;font-weight:700}
+/* device mockups */
+.devices{position:relative;height:300px}
+/* laptop */
+.mock-laptop{position:absolute;bottom:0;left:-24px;width:360px}
+.mock-laptop .lscreen{background:var(--bg);border-radius:10px 10px 0 0;border:2px solid #2d382d;padding:6px;aspect-ratio:16/10}
+.mock-laptop .lscreen-inner{background:var(--panel);border-radius:6px;width:100%;height:100%;overflow:hidden;font-size:4.5px;color:var(--text)}
+.mock-laptop .lbase{background:#1d251d;height:14px;border-radius:0 0 4px 4px;margin:0 -2px}
+.mock-laptop .lstand{width:80px;height:8px;background:#1a221a;border-radius:0 0 6px 6px;margin:0 auto}
+.mock-laptop .lfoot{width:120px;height:3px;background:#151d15;border-radius:999px;margin:0 auto}
+/* phone */
+.mock-phone{position:absolute;bottom:0;right:20px;width:120px;z-index:2}
+.mock-phone .pframe{background:#1d251d;border-radius:24px;padding:7px 5px;border:2px solid #2d3a2d;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.mock-phone .pnotch{width:36px;height:5px;background:#111;border-radius:999px;margin:0 auto 5px}
+.mock-phone .pscreen{background:var(--bg);border-radius:14px;overflow:hidden;aspect-ratio:9/19;font-size:4px;color:var(--text)}
+.mock-phone .pscreen-inner{width:100%;height:100%;padding:4px}
+/* mini dashboard inside laptop */
+.lds-top{display:flex;justify-content:space-between;align-items:center;padding:3px 5px 2px;background:var(--panel)}
+.lds-logo{display:flex;align-items:center;gap:2px;font-weight:700;font-size:5px}
+.lds-logo i{width:7px;height:7px;border-radius:2px;background:var(--lime);color:var(--onlime);display:grid;place-items:center;font-style:normal;font-size:4px}
+.lds-av{width:7px;height:7px;border-radius:50%;background:var(--lime)}
+.lds-body{display:grid;grid-template-columns:70px 1fr 1fr;gap:3px;padding:3px 4px}
+.lds-card{background:linear-gradient(135deg,var(--lime),#7fd61f);border-radius:5px;padding:4px;color:var(--onlime)}
+.lds-card .ldc-sm{font-size:3px;opacity:.7;display:block}
+.lds-card .ldc-bal{font-size:7px;font-weight:700;margin:1px 0}
+.lds-card .ldc-num{font-size:3px;opacity:.75;letter-spacing:.06em}
+.lds-panel{background:var(--panel);border-radius:5px;padding:4px}
+.lds-panel .ldp-title{font-size:3.5px;font-weight:600;margin-bottom:3px;opacity:.7}
+.lds-panel .ldp-val{font-size:7px;font-weight:700}
+.lds-panel .ldp-sub{font-size:3px;color:var(--mute)}
+.lds-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin:2px 4px 0}
+.lds-btn{background:var(--panel2);border-radius:3px;height:10px;display:grid;place-items:center}
+.lds-btn span{display:block;width:5px;height:5px;border-radius:50%;background:var(--mute);opacity:.6}
+.lds-tx{margin:2px 4px 0}
+.lds-tx-title{font-size:3.5px;font-weight:600;margin-bottom:2px;opacity:.7}
+.lds-tx-row{display:flex;align-items:center;gap:2px;padding:1.5px 0;border-bottom:1px solid var(--line)}
+.lds-tx-row:last-child{border:0}
+.lds-tx-dot{width:5px;height:5px;border-radius:50%;background:var(--panel2);flex:none}
+.lds-tx-name{flex:1;font-size:3px;opacity:.8}
+.lds-tx-amt{font-size:3px;color:var(--red)}
+/* mini phone screen */
+.pds-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.pds-av{width:7px;height:7px;border-radius:50%;background:var(--lime)}
+.pds-logo{font-size:4.5px;font-weight:700;color:var(--lime)}
+.pds-card{background:linear-gradient(135deg,var(--lime),#7fd61f);border-radius:5px;padding:5px;color:var(--onlime);margin-bottom:3px}
+.pds-card small{font-size:3px;opacity:.7;display:block}
+.pds-card b{font-size:9px;font-weight:700;display:block;margin:1px 0}
+.pds-card span{font-size:3px;opacity:.75;letter-spacing:.06em}
+.pds-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.pds-btn{background:var(--panel2);border-radius:3px;height:10px;display:grid;place-items:center}
+.pds-btn i{display:block;width:5px;height:5px;border-radius:50%;background:var(--mute);opacity:.5}
+.mini{display:none}
+/* login pill */
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(198,244,50,.12);border:1px solid rgba(198,244,50,.3);border-radius:999px;padding:7px 14px 7px 10px;font-size:13px;color:var(--lime);margin-bottom:28px}
+.hero-pill i{width:8px;height:8px;border-radius:50%;background:var(--lime);animation:pulse2 2s ease-in-out infinite}
+@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.4}}
 .formwrap{display:grid;place-items:center;padding:32px}
 form{width:min(380px,100%);display:grid;gap:14px}
 form h2{margin:0;font-size:28px}
@@ -166,7 +223,7 @@ body{font-variant-numeric:tabular-nums}
 @media (prefers-reduced-motion:no-preference){.ck{animation:scaleIn .24s ease-out}@keyframes scaleIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}}
 .vc{aspect-ratio:1.6;max-width:380px;border-radius:22px;background:linear-gradient(135deg,var(--lime),#2fd06a);color:var(--onlime);padding:22px;display:flex;flex-direction:column;justify-content:space-between;margin:0 auto 4px}
 .vc strong{font-size:20px;letter-spacing:.1em}
-#v-Kartu .card,#v-Riwayat .card{max-width:560px}
+#v-Kartu .card,#v-Riwayat .card{max-width:680px}
 @media (max-width:1100px){.bal,.tx{grid-column:span 12}.spend,.fx,.inc{grid-column:span 6}}
 @media (max-width:760px){
 #login{grid-template-columns:1fr}.hero{padding:28px 24px 36px}.mini{display:none}.hero h1{max-width:none}
@@ -198,8 +255,8 @@ nav .logo{margin-bottom:8px}
 .np{display:flex;flex-direction:column;gap:6px;background:var(--panel);border-radius:999px;padding:6px}
 .nb.on{background:var(--text);color:var(--bg)}
 #out{background:var(--panel)}
-main{padding:24px 28px 24px 0}
-.grid{grid-template-columns:340px 1fr 1fr;grid-template-areas:"bal spend fx" "tx inc inc";gap:14px}
+main{padding:24px 28px 24px 0;max-width:1200px}
+.grid{grid-template-columns:300px 1fr 1fr;grid-template-areas:"bal spend fx" "tx inc inc";gap:14px}
 .bal{grid-area:bal;margin-top:22px;box-shadow:0 -10px 0 -5px rgba(198,244,50,.5),0 -20px 0 -10px rgba(198,244,50,.25)}
 .spend{grid-area:spend}.fx{grid-area:fx}.tx{grid-area:tx}.inc{grid-area:inc}
 .card{border-radius:28px}
@@ -216,7 +273,7 @@ main{padding:24px 28px 24px 0}
 .sv .exb,.stk .exb{width:100%;margin-top:12px}
 @media (max-width:760px){.sv,.stk{grid-column:span 12}}
 @media (min-width:1101px){.grid{grid-template-areas:"bal spend fx" "tx inc inc" "sv stk stk"}.sv{grid-area:sv}.stk{grid-area:stk}}
-@media (min-width:1560px){main{max-width:1780px}.grid{grid-template-columns:340px 1fr 1fr 360px;grid-template-areas:"bal spend fx sv" "tx inc inc stk"}}
+@media (min-width:1360px){main{max-width:1200px}.grid{grid-template-columns:300px 1fr 1fr;grid-template-areas:"bal spend fx" "tx inc inc" "sv stk stk"}}
 .amt{cursor:pointer;width:fit-content;-webkit-touch-callout:none;user-select:none}
 
 .coin{flex:none;border-radius:50%}
@@ -300,10 +357,82 @@ main{padding:24px 28px 24px 0}
 <section id="login">
   <div class="hero">
     <div class="logo"><i>M</i><span>M<b>Ewalletin</b></span></div>
-    <div>
-      <h1>Uang kamu, satu genggaman.</h1>
-      <p>Kirim, terima, dan pantau saldo dari HP maupun komputer.</p>
-      <div class="mini"><small>Saldo</small><strong>Rp 8.406.620</strong><small>4378 4324 0911 5467</small></div>
+    <div class="hero-text">
+      <div class="hero-pill"><i></i>Dompet digital yang aman & cepat</div>
+      <h1>Uang kamu,<br>satu genggaman.</h1>
+      <p>Kirim, terima, tabung, dan pantau keuanganmu dari HP maupun komputer dengan tampilan yang bersih.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><small>Pengguna aktif</small><b>12.4K+</b></div>
+        <div class="hero-stat"><small>Transaksi hari ini</small><b>48.2K</b></div>
+        <div class="hero-stat"><small>Uptime</small><b>99.9%</b></div>
+      </div>
+    </div>
+    <div class="devices">
+      <!-- Laptop mockup -->
+      <div class="mock-laptop">
+        <div class="lscreen">
+          <div class="lscreen-inner">
+            <div class="lds-top">
+              <div class="lds-logo"><i>M</i> MEwalletin</div>
+              <div class="lds-av"></div>
+            </div>
+            <div class="lds-body">
+              <div class="lds-card">
+                <span class="ldc-sm">Total saldo</span>
+                <div class="ldc-bal">Rp 7.000.000</div>
+                <div class="ldc-num">•••• •••• •••• 3262</div>
+              </div>
+              <div class="lds-panel">
+                <div class="ldp-title">Pengeluaran</div>
+                <div class="ldp-val">Rp 0</div>
+                <div class="ldp-sub">Bulan ini</div>
+              </div>
+              <div class="lds-panel">
+                <div class="ldp-title">Tukar Mata Uang</div>
+                <div class="ldp-val">IDR</div>
+                <div class="ldp-sub">→ MYR</div>
+              </div>
+            </div>
+            <div class="lds-btns">
+              <div class="lds-btn"><span></span></div>
+              <div class="lds-btn"><span></span></div>
+              <div class="lds-btn"><span></span></div>
+              <div class="lds-btn"><span></span></div>
+            </div>
+            <div class="lds-tx">
+              <div class="lds-tx-title">Transaksi terbaru</div>
+              <div class="lds-tx-row"><div class="lds-tx-dot"></div><span class="lds-tx-name">Top up saldo</span><span class="lds-tx-amt">+Rp 1.000.000</span></div>
+              <div class="lds-tx-row"><div class="lds-tx-dot"></div><span class="lds-tx-name">Top up saldo</span><span class="lds-tx-amt">+Rp 1.000.000</span></div>
+              <div class="lds-tx-row"><div class="lds-tx-dot"></div><span class="lds-tx-name">Top up saldo</span><span class="lds-tx-amt">+Rp 1.000.000</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="lbase"></div>
+        <div class="lstand"></div>
+        <div class="lfoot"></div>
+      </div>
+      <!-- Phone mockup -->
+      <div class="mock-phone">
+        <div class="pframe">
+          <div class="pnotch"></div>
+          <div class="pscreen">
+            <div class="pscreen-inner">
+              <div class="pds-nav"><div class="pds-logo">ME</div><div class="pds-av"></div></div>
+              <div class="pds-card">
+                <small>Total saldo</small>
+                <b>Rp 7.000.000</b>
+                <span>•••• •••• •••• 3262</span>
+              </div>
+              <div class="pds-grid">
+                <div class="pds-btn"><i></i></div>
+                <div class="pds-btn"><i></i></div>
+                <div class="pds-btn"><i></i></div>
+                <div class="pds-btn"><i></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="formwrap">
@@ -430,7 +559,7 @@ function ini(n){return n.split(/\s+/).map(function(w){return w[0]||""}).join("")
 function li(x){var l=document.createElement("li"),a=document.createElement("span"),b=document.createElement("span"),s=document.createElement("small"),c=document.createElement("b");
  a.className="ic";a.textContent=ini(x.n);b.className="nm";b.textContent=x.n;s.textContent=x.d;b.appendChild(s);c.className=x.a<0?"out":"in";c.textContent=(x.a<0?"-":"+")+rp(x.a);l.append(a,b,c);return l}
 function fill(id,arr){var u=$(id);u.textContent="";if(!arr.length){var e=document.createElement("li");e.textContent="Belum ada transaksi. Mulai dengan top up saldo.";e.style.color="var(--mute)";u.appendChild(e)}arr.forEach(function(x){u.appendChild(li(x))})}
-var DN=["Min","Sen","Sel","Rab","Kam","Jum","Sab"],CL=["var(--lime)","#facc15","var(--green)","var(--mute)"],R={USD:16300,EUR:18900,MYR:3850,SGD:12600,JPY:108,AUD:10700,GBP:21800};
+var DN=["Min","Sen","Sel","Rab","Kam","Jum","Sab"],CL=["var(--lime)","#facc15","var(--green)","var(--mute)"],R={USD:15850,EUR:17280,MYR:3620,SGD:12050,JPY:105,AUD:10320,GBP:20450};
 function T(n,a,x){return{n:n,d:now(),ts:Date.now(),a:a,x:x||0}}
 function stats(){var u=cur,day=864e5,d0=new Date(),b=[0,0,0,0,0,0,0],pv=0,inc=0,sp=0,sm={};d0.setHours(0,0,0,0);
  u.tx.forEach(function(x){var v=Math.abs(x.a);
@@ -548,9 +677,35 @@ function bamt(){var p=BC[S.c].p[S.p],o=p[1];return o?(S.o>=0?o[S.o][1]:0):(parse
 function sv(){var n=$("bn"),m=$("ba");if(n)S.no=n.value;if(m)S.a=m.value.replace(/\D/g,"")}
 function ik(n){var d={x:"M6 6l12 12M18 6L6 18",b:"M15 5l-7 7 7 7",r:"M9 5l7 7-7 7",c:"M5 12.5l4.5 4.5L19 7",d:"M21 5H9l-6 7 6 7h12zM15 9.5l-4 5M11 9.5l4 5"};return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="'+d[n]+'"/></svg>'}
 function bh(t,b){return '<div class="ot"><button class="ob" data-b="'+b+'" aria-label="'+(b==="x"?"Tutup":"Kembali")+'">'+ik(b==="x"?"x":"b")+'</button><b>'+t+'</b><span></span></div>'}
+var CATLOGO={
+ "Internet":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#0a4fa8"/><path d="M18 8a10 10 0 100 20A10 10 0 0018 8zm0 2c.9 0 2.2 1.6 3 4.5H15c.8-2.9 2.1-4.5 3-4.5zm-5 .8A12 12 0 0011 14H8.5a8.1 8.1 0 014.5-3.2zm10 0A8.1 8.1 0 0127.5 14H25a12 12 0 00-2-3.2zM8.5 16H12c-.1.65-.1 1.3-.1 2s0 1.35.1 2H8.5A8 8 0 018 18a8 8 0 01.5-2zm5.5 0h8c.1.65.1 1.3.1 2s-.1 1.35-.1 2H14c-.1-.65-.1-1.3-.1-2s0-1.35.1-2zm9 0h3.5c.3.64.5 1.3.5 2a8 8 0 01-.5 2H23c.1-.65.1-1.3.1-2s0-1.35-.1-2zM11 22h2.5c.5 1.2 1.2 2.3 2 3.2A8.1 8.1 0 0111 22zm6.5 0h1c-.8 2.9-2.1 4.5-3 4.5s-2.2-1.6-3-4.5h1zm1 0h2.5A8.1 8.1 0 0125 25.2 12 12 0 0122.5 22z" fill="#fff" opacity=".9"/></svg>',
+ "Listrik":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#003087"/><path d="M20 9l-8 12h7l-2 8 9-13h-7z" fill="#FFD100"/></svg>',
+ "Layanan berbayar":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#1a1a2e"/><path d="M13 11h4l4 7-4 7h-4l4-7z" fill="#a855f7"/><path d="M18 11h5l-5 14h-1l4-7-3-7z" fill="#7c3aed"/></svg>',
+ "Pulsa":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#e8002d"/><path d="M18 10a8 8 0 100 16A8 8 0 0018 10zm0 2a6 6 0 110 12 6 6 0 010-12zm0 2.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z" fill="#fff"/></svg>'
+};
+var PROVLOGO={
+ "IndiHome":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#e3000f"/><text x="18" y="23" text-anchor="middle" fill="#fff" font-size="6" font-weight="700" font-family="Arial,sans-serif">IndiHome</text></svg>',
+ "Biznet":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#003399"/><text x="18" y="24" text-anchor="middle" fill="#fff" font-size="9.5" font-weight="700" font-family="Arial,sans-serif">Biznet</text></svg>',
+ "MyRepublic":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#ff6600"/><text x="18" y="22" text-anchor="middle" fill="#fff" font-size="5.5" font-weight="700" font-family="Arial,sans-serif">MyRepublic</text></svg>',
+ "First Media":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#00539b"/><text x="18" y="23" text-anchor="middle" fill="#fff" font-size="6" font-weight="700" font-family="Arial,sans-serif">First Media</text></svg>',
+ "Token PLN":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#003087"/><path d="M20 9l-8 12h7l-2 8 9-13h-7z" fill="#FFD100"/></svg>',
+ "Tagihan PLN":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#003087"/><path d="M20 9l-8 12h7l-2 8 9-13h-7z" fill="#FFD100"/></svg>',
+ "Netflix":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#141414"/><path d="M12 9h3.5l3 9.5V9H22v18l-3.5-.5-3-9.5V27H12z" fill="#e50914"/></svg>',
+ "HBO":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#1c1c1e"/><text x="18" y="25" text-anchor="middle" fill="#fff" font-size="12" font-weight="900" font-family="Arial,sans-serif">HBO</text></svg>',
+ "Disney+":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#113ccf"/><text x="18" y="20" text-anchor="middle" fill="#fff" font-size="7.5" font-weight="800" font-family="Arial,sans-serif">Disney</text><text x="23" y="30" text-anchor="middle" fill="#48c9f8" font-size="12" font-weight="900" font-family="Arial,sans-serif">+</text></svg>',
+ "Spotify":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#1db954"/><path d="M12 15c3.8-1.2 8-1 11 .8" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M13 19c3.2-1 6.8-.8 9.5.6" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M14 23c2.6-.8 5.6-.6 7.5.4" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>',
+ "YouTube Premium":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#ff0000"/><rect x="9" y="12" width="18" height="12" rx="3" fill="#fff"/><path d="M15.5 15.5l7 2.5-7 2.5z" fill="#ff0000"/></svg>',
+ "Vidio":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#00aaff"/><text x="18" y="24" text-anchor="middle" fill="#fff" font-size="10" font-weight="700" font-family="Arial,sans-serif">Vidio</text></svg>',
+ "Telkomsel":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#e4002b"/><text x="18" y="22" text-anchor="middle" fill="#fff" font-size="5.5" font-weight="700" font-family="Arial,sans-serif">Telkomsel</text></svg>',
+ "Indosat":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#ffd700"/><text x="18" y="22" text-anchor="middle" fill="#1a1a1a" font-size="6.5" font-weight="700" font-family="Arial,sans-serif">Indosat</text></svg>',
+ "XL":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#0032a0"/><text x="18" y="26" text-anchor="middle" fill="#fff" font-size="15" font-weight="900" font-family="Arial,sans-serif">XL</text></svg>',
+ "Tri":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#111"/><text x="18" y="27" text-anchor="middle" fill="#fff" font-size="18" font-weight="900" font-family="Arial,sans-serif">3</text></svg>',
+ "Smartfren":'<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="#003087"/><text x="18" y="22" text-anchor="middle" fill="#fff" font-size="5.5" font-weight="700" font-family="Arial,sans-serif">Smartfren</text></svg>'
+};
+function _logo(map,key){return map[key]||('<svg viewBox="0 0 36 36" width="36" height="36"><rect width="36" height="36" rx="10" fill="var(--panel2)"/><text x="18" y="23" text-anchor="middle" fill="var(--lime)" font-size="14" font-weight="700" font-family="sans-serif">'+esc(key[0])+'</text></svg>')}
 function drawB(){var h="",c=BC[S.c],p=c&&c.p[S.p];
- if(S.st==="cat"){h=bh("Bayar tagihan","x")+'<div class="bl2">'+BC.map(function(x,i){return '<button class="brw" data-b="cat" data-v="'+i+'"><span class="ic">'+x.k[0]+'</span><span class="nm">'+x.k+'<small>'+x.d+'</small></span><span>'+ik("r")+'</span></button>'}).join("")+'</div>'}
- else if(S.st==="prov"){h=bh(c.k,"bk")+'<div class="bl2">'+c.p.map(function(x,i){return '<button class="brw" data-b="prov" data-v="'+i+'"><span class="ic">'+esc(x[0][0])+'</span><span class="nm">'+esc(x[0])+'</span><span>'+ik("r")+'</span></button>'}).join("")+'</div>'}
+ if(S.st==="cat"){h=bh("Bayar tagihan","x")+'<div class="bl2">'+BC.map(function(x,i){return '<button class="brw" data-b="cat" data-v="'+i+'"><span class="ic" style="background:none;padding:0;overflow:hidden;border-radius:10px;width:36px;height:36px">'+_logo(CATLOGO,x.k)+'</span><span class="nm">'+x.k+'<small>'+x.d+'</small></span><span>'+ik("r")+'</span></button>'}).join("")+'</div>'}
+ else if(S.st==="prov"){h=bh(c.k,"bk")+'<div class="bl2">'+c.p.map(function(x,i){return '<button class="brw" data-b="prov" data-v="'+i+'"><span class="ic" style="background:none;padding:0;overflow:hidden;border-radius:10px;width:36px;height:36px">'+_logo(PROVLOGO,x[0])+'</span><span class="nm">'+esc(x[0])+'</span><span>'+ik("r")+'</span></button>'}).join("")+'</div>'}
  else if(S.st==="form"){var o=p[1],am=bamt(),tot=am+c.fee,sb=c.k==="Layanan berbayar";
   h=bh(esc(p[0]),"bk")+'<div class="bf"><label>'+c.f+'<input id="bn" value="'+esc(S.no)+'" inputmode="'+(sb?"email":"numeric")+'" autocomplete="off"></label>'
   +(o?'<p class="hint">'+(sb?"Pilih paket":"Pilih nominal")+'</p><div class="og">'+o.map(function(x,i){return '<button class="opt'+(i===S.o?" on":"")+'" data-b="opt" data-v="'+i+'">'+esc(x[0])+(sb?'<small>'+rp(x[1])+'</small>':"")+'</button>'}).join("")+'</div>':'<label>Jumlah tagihan (Rp)<input id="ba" value="'+(S.a?(+S.a).toLocaleString("id-ID"):"")+'" inputmode="numeric" placeholder="0" autocomplete="off"></label>')
