@@ -104,7 +104,10 @@ main{padding:24px;max-width:1280px;width:100%}
 .btn:disabled{opacity:.35;cursor:not-allowed}
 .rc{align-items:center;justify-content:center;gap:10px;text-align:center}
 .qr{background:#fff;border-radius:26px;padding:18px;width:min(260px,70%)}.qr svg{width:100%;height:auto;display:block}
-.dn{align-items:center;justify-content:center;text-align:center;gap:8px}
+.dn{align-items:center;justify-content:center;text-align:center;gap:8px;transition:opacity .18s ease;animation:dnFade .25s ease-out}
+@keyframes dnFade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.spn{width:52px;height:52px;border-radius:50%;border:3px solid var(--panel2);border-top-color:var(--lime);animation:spin .75s linear infinite;margin-bottom:12px}
+@keyframes spin{to{transform:rotate(360deg)}}
 .ck{width:92px;height:92px;border-radius:50%;background:var(--lime);color:var(--onlime);display:grid;place-items:center;font-size:46px;font-weight:700;margin-bottom:10px}
 .dn h2{margin:0;font-size:26px}.bigs{font-size:36px;font-weight:700;margin:4px 0}
 .ov{background:var(--bg)}
@@ -160,7 +163,7 @@ body{font-variant-numeric:tabular-nums}
 .seg .ico{display:block}
 .formwrap>.ck:empty{display:none}.formwrap>.ck{width:min(380px,100%)}
 .leg span{display:flex;align-items:center;min-width:0}.leg em{margin-left:auto;padding-left:8px;font-style:normal;color:var(--text)}
-@media (prefers-reduced-motion:no-preference){.ck{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}@keyframes pop{from{transform:scale(.4);opacity:0}}}
+@media (prefers-reduced-motion:no-preference){.ck{animation:scaleIn .24s ease-out}@keyframes scaleIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}}
 .vc{aspect-ratio:1.6;max-width:380px;border-radius:22px;background:linear-gradient(135deg,var(--lime),#2fd06a);color:var(--onlime);padding:22px;display:flex;flex-direction:column;justify-content:space-between;margin:0 auto 4px}
 .vc strong{font-size:20px;letter-spacing:.1em}
 #v-Kartu .card,#v-Riwayat .card{max-width:560px}
@@ -493,20 +496,22 @@ function draw(){var k=S.k,h="",a=ev(S.a||"");if(k==="Bayar")return drawB();if(k=
  else if(S.st==="amt"){var kp="";["7","8","9","÷","4","5","6","×","1","2","3","−","000","0","del","+"].forEach(function(d){var op="÷×−+".indexOf(d)>-1;kp+='<button class="'+(op?"op":"")+'" data-o="key" data-v="'+d+'" aria-label="'+(d==="del"?"Hapus":d)+'">'+(d==="del"?ik("d"):d)+"</button>"});
   var sub=k==="Kirim"?'<span class="pill">Tersedia '+rp(cur.bal)+'</span><button class="chip" data-o="max">Maks</button>':[100000,500000,1000000].map(function(v){return '<button class="chip" data-o="add" data-v="'+v+'">+'+rp(v).replace("Rp ","")+"</button>"}).join("");
   h=hd()+'<div class="acc"><span class="chip2"><i>M</i><span>MEwalletin<small>'+rp(cur.bal)+'</small></span></span><span class="chip2">IDR</span></div><div class="amb">'+(/[+−×÷]/.test(S.a)?'<span class="expr">'+S.a.replace(/\d+/g,function(n){return (+n).toLocaleString("id-ID")}).replace(/[+−×÷]/g," $& ")+'</span>':"")+'<div class="big'+(a?"":" z")+'"><small>Rp</small>'+(a?a.toLocaleString("id-ID"):"0")+'</div><div class="sub">'+sub+'</div><p class="err">'+S.err+'</p></div><div class="kp">'+kp+'</div><div class="bot">'+(k==="Kirim"?'<button class="chip2" data-o="to">Ke '+esc(S.to)+'</button>':'<span class="chip2">Ke saldo MEwalletin</span>')+'<button class="wh" data-o="go"'+(a?"":" disabled")+'>'+(k==="Kirim"?"Kirim":"Top up")+'</button></div>'}
+ else if(S.st==="proc"){h='<div class="dn"><div class="spn"></div><h2>Memproses...</h2><p class="bigs">'+rp(a)+'</p><p class="hint">'+(k==="Kirim"?"Sedang mengirim ke "+esc(S.to):"Sedang menambahkan ke saldo")+'</p></div>'}
  else if(S.st==="done"){h='<div class="dn"><div class="ck">'+ik("c")+'</div><h2>'+(k==="Kirim"?"Terkirim":"Top up berhasil")+'</h2><p class="bigs">'+rp(a)+'</p><p class="hint">'+(k==="Kirim"?"ke "+esc(S.to):"masuk ke saldo kamu")+'</p></div><div class="cta"><button class="btn" data-o="x">Selesai</button></div>'}
  else{var q="";try{var qr=qrcode(0,"M");qr.addData("mewalletin:"+cur.email);qr.make();q=qr.createSvgTag({cellSize:5,margin:0,scalable:true})}catch(e){}
   h=hd()+'<div class="rc"><div class="qr">'+q+'</div><b>'+esc(cur.name)+'</b><p class="hint">'+esc(cur.card)+'</p><p class="hint">Tunjukkan kode ini ke pengirim.</p></div><div class="cta"><button class="btn" data-o="copy">Salin nomor kartu</button></div>'}
  $("ov").innerHTML='<div class="oc">'+h+'</div>';
  if(S.st==="to"){var i=$("to");if(i)i.focus()}}
-function sendIt(){var u=cur,a=ev(S.a||"");if(S.k==="Tabung"||S.k==="Staking")return sendX(a);
+function finishTx(fn){var c=$("ov").querySelector(".dn");if(c)c.style.opacity="0";setTimeout(function(){fn();save();render();S.st="done";draw()},180)}
+function sendIt(){if(S.st==="proc")return;var u=cur,a=ev(S.a||"");if(S.k==="Tabung"||S.k==="Staking")return sendX(a);
  if(!a){S.err="Masukkan jumlah dulu.";return draw()}
  if(S.k==="Kirim"){if(u.frozen){S.err="Kartu dibekukan. Aktifkan di menu Kartu.";return draw()}
-  if(a>u.bal){S.err="Saldo tidak cukup.";return draw()}
-  u.bal-=a;u.tx.unshift(T(S.to,-a))}
- else{if(a>10000000){S.err="Maksimal Rp 10.000.000 sekali top up.";return draw()}
-  u.bal+=a;u.tx.unshift(T("Top up saldo",a))}
- save();render();S.st="done";draw()}
-$("ov").addEventListener("click",function(e){var b=e.target.closest("[data-o]");if(!b)return;var o=b.getAttribute("data-o"),v=b.getAttribute("data-v");S.err="";
+  if(a>u.bal){S.err="Saldo tidak cukup.";return draw()}}
+ else{if(a>10000000){S.err="Maksimal Rp 10.000.000 sekali top up.";return draw()}}
+ S.st="proc";draw();
+ var d=Math.floor(Math.random()*1600)+1200;
+ setTimeout(function(){finishTx(function(){if(S.k==="Kirim"){u.bal-=a;u.tx.unshift(T(S.to,-a))}else{u.bal+=a;u.tx.unshift(T("Top up saldo",a))}})},d)}
+$("ov").addEventListener("click",function(e){if(S.st==="proc")return;var b=e.target.closest("[data-o]");if(!b)return;var o=b.getAttribute("data-o"),v=b.getAttribute("data-v");S.err="";
  if(o==="x")closeM();
  else if(o==="to"){S.st="to";S.a="";draw()}
  else if(o==="next"){var n=($("to").value||"").trim();S.to=n;if(n.length<2){S.err="Isi nama penerima.";draw();return}S.st="amt";draw()}
@@ -517,7 +522,7 @@ $("ov").addEventListener("click",function(e){var b=e.target.closest("[data-o]");
  else if(o==="max"){S.a=String(cur.bal);draw()}
  else if(o==="go")sendIt();
  else if(o==="copy"){try{navigator.clipboard.writeText(cur.card).then(function(){toast("Nomor kartu disalin")},function(){toast("Gagal menyalin")})}catch(x){toast("Gagal menyalin")}}});
-document.addEventListener("keydown",function(e){if($("ov").classList.contains("hide"))return;
+document.addEventListener("keydown",function(e){if($("ov").classList.contains("hide")||S.st==="proc")return;
  if(e.key==="Escape"){closeM();return}
  if(S.st==="to"&&e.key==="Enter"){var b=document.querySelector('[data-o="next"]');if(b)b.click();return}
  if(S.st==="amt"){var m={"-":"−","*":"×","/":"÷","+":"+"};if(/^\d$/.test(e.key))press(e.key);else if(m[e.key])press(m[e.key]);else if(e.key==="Backspace")press("del");else if(e.key==="Enter"&&e.target.tagName!=="BUTTON")sendIt()}});
@@ -550,18 +555,19 @@ function drawB(){var h="",c=BC[S.c],p=c&&c.p[S.p];
   h=bh(esc(p[0]),"bk")+'<div class="bf"><label>'+c.f+'<input id="bn" value="'+esc(S.no)+'" inputmode="'+(sb?"email":"numeric")+'" autocomplete="off"></label>'
   +(o?'<p class="hint">'+(sb?"Pilih paket":"Pilih nominal")+'</p><div class="og">'+o.map(function(x,i){return '<button class="opt'+(i===S.o?" on":"")+'" data-b="opt" data-v="'+i+'">'+esc(x[0])+(sb?'<small>'+rp(x[1])+'</small>':"")+'</button>'}).join("")+'</div>':'<label>Jumlah tagihan (Rp)<input id="ba" value="'+(S.a?(+S.a).toLocaleString("id-ID"):"")+'" inputmode="numeric" placeholder="0" autocomplete="off"></label>')
   +'<div class="sm"><div><span>Tagihan</span><b id="s1">'+rp(am)+'</b></div><div><span>Biaya admin</span><b>'+rp(c.fee)+'</b></div><div class="tt"><span>Total</span><b id="s2">'+rp(tot)+'</b></div></div><p class="err">'+S.err+'</p></div><div class="cta"><button class="btn" data-b="pay" id="bp">Bayar '+rp(tot)+'</button></div>'}
+ else if(S.st==="proc"){h='<div class="dn"><div class="spn"></div><h2>Memproses pembayaran...</h2><p class="bigs">'+rp(S.t)+'</p><p class="hint">'+esc(S.r)+'</p></div>'}
  else{h='<div class="dn"><div class="ck">'+ik("c")+'</div><h2>Pembayaran berhasil</h2><p class="bigs">'+rp(S.t)+'</p><p class="hint">'+esc(S.r)+'</p>'+(S.tk?'<p class="tok">'+S.tk+'</p>':'')+'<p class="hint">Mode demo: belum terhubung ke penyedia asli.</p></div><div class="cta"><button class="btn" data-b="x">Selesai</button></div>'}
  $("ov").innerHTML='<div class="oc">'+h+'</div>'}
-function payB(){sv();var c=BC[S.c],p=c.p[S.p],am=bamt(),tot=am+c.fee,u=cur,no=(S.no||"").trim(),k=c.k;
+function payB(){if(S.st==="proc")return;sv();var c=BC[S.c],p=c.p[S.p],am=bamt(),tot=am+c.fee,u=cur,no=(S.no||"").trim(),k=c.k;
  var ok=k==="Pulsa"?/^0\d{8,13}$/.test(no):k==="Layanan berbayar"?/^\S+@\S+\.\S+$/.test(no):/^\d{6,15}$/.test(no);
  if(!ok){S.err=k==="Pulsa"?"Nomor HP belum benar. Contoh: 0812xxxxxxxx.":k==="Layanan berbayar"?"Isi email akun yang benar.":"Nomor pelanggan harus 6 sampai 15 angka.";return draw()}
  if(!am||(!p[1]&&am<10000)){S.err=p[1]?"Pilih dulu sebelum membayar.":"Minimal tagihan Rp 10.000.";return draw()}
  if(u.frozen){S.err="Kartu dibekukan. Aktifkan di menu Kartu.";return draw()}
  if(tot>u.bal){S.err="Saldo tidak cukup. Total "+rp(tot)+".";return draw()}
- u.bal-=tot;u.tx.unshift(T(p[0],-tot));S.t=tot;S.r=p[0]+", "+no;
- S.tk=p[0]==="Token PLN"?[0,1,2,3,4].map(function(){return String(Math.floor(Math.random()*9000)+1000)}).join(" "):"";
- S.st="done";save();render();draw()}
-$("ov").addEventListener("click",function(e){var b=e.target.closest("[data-b]");if(!b||S.k!=="Bayar")return;var o=b.getAttribute("data-b"),v=+b.getAttribute("data-v");sv();S.err="";
+ S.st="proc";S.t=tot;S.r=p[0]+", "+no;draw();
+ var d=Math.floor(Math.random()*1600)+1200;
+ setTimeout(function(){finishTx(function(){u.bal-=tot;u.tx.unshift(T(p[0],-tot));S.tk=p[0]==="Token PLN"?[0,1,2,3,4].map(function(){return String(Math.floor(Math.random()*9000)+1000)}).join(" "):""})},d)}
+$("ov").addEventListener("click",function(e){if(S.st==="proc")return;var b=e.target.closest("[data-b]");if(!b||S.k!=="Bayar")return;var o=b.getAttribute("data-b"),v=+b.getAttribute("data-v");sv();S.err="";
  if(o==="x")closeM();
  else if(o==="cat"){S.c=v;S.st="prov";draw()}
  else if(o==="prov"){S.p=v;S.o=-1;S.no="";S.a="";S.st="form";draw()}
@@ -616,21 +622,28 @@ function drawX(){var k=S.k,u=cur,h="",tb=k==="Tabung",a=ev(S.a||"");
  else if(S.st==="new"){h=bh("Target baru","bk")+'<div class="bf"><label>Nama target<input id="gn" placeholder="Contoh: Liburan" autocomplete="off"></label><label>Target (Rp)<input id="gt" inputmode="numeric" placeholder="5000000" autocomplete="off"></label><p class="err">'+S.err+'</p></div><div class="cta"><button class="btn" data-b="mk">Buat target</button></div>'}
  else if(S.st==="amt"){var g=tb?u.sv[S.i]:null,p=tb?null:PL[S.i],s=tb?null:(u.st[p[0]]||{a:0}),av=tb?g.a:s.a+acc(p),out=S.md==="out";
   h=bh(tb?esc(g.n):coin(p[0],24)+p[0],"bk")+'<div class="seg" style="align-self:center">'+[["in",tb?"Setor":"Stake"],["out","Tarik"]].map(function(t){return '<button class="'+(S.md===t[0]?"on":"")+'" data-b="md" data-v="'+t[0]+'">'+t[1]+'</button>'}).join("")+'</div><div class="amb"><div class="big'+(a?"":" z")+'"><small>Rp</small>'+(a?a.toLocaleString("id-ID"):"0")+'</div><p class="hint">'+(out?"Tersedia "+rp(av):"Saldo "+rp(u.bal))+'</p><p class="err">'+S.err+'</p></div><div class="kp">'+kpad()+'</div><div class="bot"><span class="chip2">'+(tb?"Tabungan":"Staking "+p[0])+'</span><button class="wh" data-o="go"'+(a?"":" disabled")+'>'+(out?"Tarik":tb?"Setor":"Stake")+'</button></div>'}
+ else if(S.st==="proc"){h='<div class="dn"><div class="spn"></div><h2>Memproses...</h2><p class="bigs">'+rp(a)+'</p><p class="hint">'+(tb?(S.md==="out"?"Penarikan tabungan":"Setoran tabungan"):(S.md==="out"?"Penarikan staking":"Staking aset"))+'</p></div>'}
  else{h='<div class="dn"><div class="ck">'+ik("c")+'</div><h2>'+(tb?(S.md==="out"?"Berhasil ditarik":"Berhasil ditabung"):(S.md==="out"?"Staking ditarik":"Staking dimulai"))+'</h2><p class="bigs">'+rp(a)+'</p>'+(tb?'':'<p class="hint">Mode demo: belum terhubung ke jaringan kripto.</p>')+'</div><div class="cta"><button class="btn" data-b="x">Selesai</button></div>'}
  $("ov").innerHTML='<div class="oc">'+h+'</div>'}
-function sendX(a){var u=cur,tb=S.k==="Tabung",out=S.md==="out",er=function(m){S.err=m;draw()};
+function sendX(a){if(S.st==="proc")return;var u=cur,tb=S.k==="Tabung",out=S.md==="out",er=function(m){S.err=m;draw()};
  if(!a)return er("Masukkan jumlah dulu.");
  if(!out&&u.frozen)return er("Kartu dibekukan. Aktifkan di menu Kartu.");
  if(!out&&a>u.bal)return er("Saldo tidak cukup.");
  if(tb){var g=u.sv[S.i];
-  if(out){if(a>g.a)return er("Saldo tabungan hanya "+rp(g.a)+".");g.a-=a;u.bal+=a;u.tx.unshift(T("Tarik dari "+g.n,a,1))}
-  else{g.a+=a;u.bal-=a;u.tx.unshift(T("Tabung "+g.n,-a,1))}}
+  if(out){if(a>g.a)return er("Saldo tabungan hanya "+rp(g.a)+".")}}
  else{var p=PL[S.i],s=u.st[p[0]]||{a:0,ts:Date.now()},c=acc(p);
-  if(out){if(a>s.a+c)return er("Yang bisa ditarik "+rp(s.a+c)+".");u.bal+=a;u.tx.unshift(T("Tarik staking "+p[0],a,1));s={a:s.a+c-a,ts:Date.now()}}
-  else{u.bal-=a;u.tx.unshift(T("Stake "+p[0],-a,1));s={a:s.a+c+a,ts:Date.now()}}
-  u.st[p[0]]=s}
- save();render();S.st="done";draw()}
-$("ov").addEventListener("click",function(e){var b=e.target.closest("[data-b]");if(!b||(S.k!=="Tabung"&&S.k!=="Staking"))return;var o=b.getAttribute("data-b"),v=b.getAttribute("data-v"),u=cur;S.err="";
+  if(out&&(a>s.a+c))return er("Yang bisa ditarik "+rp(s.a+c)+".")}
+ S.st="proc";draw();
+ var d=Math.floor(Math.random()*1600)+1200;
+ setTimeout(function(){finishTx(function(){
+  if(tb){var g=u.sv[S.i];
+   if(out){g.a-=a;u.bal+=a;u.tx.unshift(T("Tarik dari "+g.n,a,1))}
+   else{g.a+=a;u.bal-=a;u.tx.unshift(T("Tabung "+g.n,-a,1))}}
+  else{var p=PL[S.i],s=u.st[p[0]]||{a:0,ts:Date.now()},c=acc(p);
+   if(out){u.bal+=a;u.tx.unshift(T("Tarik staking "+p[0],a,1));s={a:s.a+c-a,ts:Date.now()}}
+   else{u.bal-=a;u.tx.unshift(T("Stake "+p[0],-a,1));s={a:s.a+c+a,ts:Date.now()}}
+   u.st[p[0]]=s}})},d)}
+$("ov").addEventListener("click",function(e){if(S.st==="proc")return;var b=e.target.closest("[data-b]");if(!b||(S.k!=="Tabung"&&S.k!=="Staking"))return;var o=b.getAttribute("data-b"),v=b.getAttribute("data-v"),u=cur;S.err="";
  if(o==="x")closeM();
  else if(o==="bk"){S.st="list";S.a="";draw()}
  else if(o==="item"){S.i=+v;S.md="in";S.a="";S.st="amt";draw()}
