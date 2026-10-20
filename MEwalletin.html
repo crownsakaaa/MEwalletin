@@ -105,7 +105,15 @@ main{padding:24px;max-width:1280px;width:100%}
 .rc{align-items:center;justify-content:center;gap:10px;text-align:center}
 .qr{background:#fff;border-radius:26px;padding:18px;width:min(260px,70%)}.qr svg{width:100%;height:auto;display:block}
 .dn{align-items:center;justify-content:center;text-align:center;gap:8px}
-.ck{width:92px;height:92px;border-radius:50%;background:var(--lime);color:var(--onlime);display:grid;place-items:center;font-size:46px;font-weight:700;margin-bottom:10px}
+.spn{width:68px;height:68px;border-radius:50%;border:3.5px solid var(--panel2);border-top-color:var(--lime);animation:spin .8s cubic-bezier(.4,0,.2,1) infinite;margin-bottom:14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ck{width:92px;height:92px;border-radius:50%;background:var(--lime);color:var(--onlime);display:grid;place-items:center;margin-bottom:14px;animation:popIn .35s cubic-bezier(.175,.885,.32,1.25) forwards}
+@keyframes popIn{from{transform:scale(.55);opacity:0}to{transform:scale(1);opacity:1}}
+.ck .ico{width:46px;height:46px;stroke-width:2.8}
+.ck-path{stroke-dasharray:30;stroke-dashoffset:30;animation:drawCheck .35s .12s cubic-bezier(.65,0,.45,1) forwards}
+@keyframes drawCheck{to{stroke-dashoffset:0}}
+.dn-content{display:flex;flex-direction:column;align-items:center;animation:fadeUp .3s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .dn h2{margin:0;font-size:26px}.bigs{font-size:36px;font-weight:700;margin:4px 0}
 .ov{background:var(--bg)}
 .oc{background:var(--panel);border-radius:32px;padding:0 14px;height:calc(100% - 20px);margin:10px auto}
@@ -556,7 +564,8 @@ function draw(){var k=S.k,h="",a=ev(S.a||"");if(k==="Bayar")return drawB();if(k=
  else if(S.st==="amt"){var kp="";["7","8","9","÷","4","5","6","×","1","2","3","−","000","0","del","+"].forEach(function(d){var op="÷×−+".indexOf(d)>-1;kp+='<button class="'+(op?"op":"")+'" data-o="key" data-v="'+d+'" aria-label="'+(d==="del"?"Hapus":d)+'">'+(d==="del"?ik("d"):d)+"</button>"});
   var sub=k==="Kirim"?'<span class="pill">Tersedia '+rp(cur.bal)+'</span><button class="chip" data-o="max">Maks</button>':[100000,500000,1000000].map(function(v){return '<button class="chip" data-o="add" data-v="'+v+'">+'+rp(v).replace("Rp ","")+"</button>"}).join("");
   h=hd()+'<div class="acc"><span class="chip2"><i>M</i><span>MEwalletin<small>'+rp(cur.bal)+'</small></span></span><span class="chip2">IDR</span></div><div class="amb">'+(/[+−×÷]/.test(S.a)?'<span class="expr">'+S.a.replace(/\d+/g,function(n){return (+n).toLocaleString("id-ID")}).replace(/[+−×÷]/g," $& ")+'</span>':"")+'<div class="big'+(a?"":" z")+'"><small>Rp</small>'+(a?a.toLocaleString("id-ID"):"0")+'</div><div class="sub">'+sub+'</div><p class="err">'+S.err+'</p></div><div class="kp">'+kp+'</div><div class="bot">'+(k==="Kirim"?'<button class="chip2" data-o="to">Ke '+esc(S.to)+'</button>':'<span class="chip2">Ke saldo MEwalletin</span>')+'<button class="wh" data-o="go"'+(a?"":" disabled")+'>'+(k==="Kirim"?"Kirim":"Top up")+'</button></div>'}
- else if(S.st==="done"){h='<div class="dn"><div class="ck">'+ik("c")+'</div><h2>'+(k==="Kirim"?"Terkirim":"Top up berhasil")+'</h2><p class="bigs">'+rp(a)+'</p><p class="hint">'+(k==="Kirim"?"ke "+esc(S.to):"masuk ke saldo kamu")+'</p></div><div class="cta"><button class="btn" data-o="x">Selesai</button></div>'}
+ else if(S.st==="proc"){h='<div class="dn"><div class="spn"></div><h2>Memproses transaksi...</h2><p class="bigs">'+rp(a)+'</p><p class="hint">'+(k==="Kirim"?"Sedang mengirim ke "+esc(S.to):"Sedang menambahkan ke saldo")+'</p></div><div class="cta"><button class="btn" disabled style="opacity:.4">Memproses...</button></div>'}
+ else if(S.st==="done"){h='<div class="dn"><div class="ck">'+ik("c")+'</div><div class="dn-content"><h2>'+(k==="Kirim"?"Terkirim":"Top up berhasil")+'</h2><p class="bigs">'+rp(a)+'</p><p class="hint">'+(k==="Kirim"?"ke "+esc(S.to):"masuk ke saldo kamu")+'</p></div></div><div class="cta"><button class="btn" data-o="x">Selesai</button></div>'}
  else{var q="";try{var qr=qrcode(0,"M");qr.addData("mewalletin:"+cur.email);qr.make();q=qr.createSvgTag({cellSize:5,margin:0,scalable:true})}catch(e){}
   h=hd()+'<div class="rc"><div class="qr">'+q+'</div><b>'+esc(cur.name)+'</b><p class="hint">'+esc(cur.card)+'</p><p class="hint">Tunjukkan kode ini ke pengirim.</p></div><div class="cta"><button class="btn" data-o="copy">Salin nomor kartu</button></div>'}
  $("ov").innerHTML='<div class="oc">'+h+'</div>';
@@ -564,13 +573,17 @@ function draw(){var k=S.k,h="",a=ev(S.a||"");if(k==="Bayar")return drawB();if(k=
 function sendIt(){var u=cur,a=ev(S.a||"");if(S.k==="Tabung"||S.k==="Staking")return sendX(a);
  if(!a){S.err="Masukkan jumlah dulu.";return draw()}
  if(S.k==="Kirim"){if(u.frozen){S.err="Kartu dibekukan. Aktifkan di menu Kartu.";return draw()}
-  if(a>u.bal){S.err="Saldo tidak cukup.";return draw()}
-  u.bal-=a;u.tx.unshift(T(S.to,-a))}
- else{if(a>10000000){S.err="Maksimal Rp 10.000.000 sekali top up.";return draw()}
-  u.bal+=a;u.tx.unshift(T("Top up saldo",a))}
- save();render();S.st="done";draw()}
+  if(a>u.bal){S.err="Saldo tidak cukup.";return draw()}}
+ else{if(a>10000000){S.err="Maksimal Rp 10.000.000 sekali top up.";return draw()}}
+ S.st="proc";draw();
+ var d=1000+Math.floor(Math.random()*2000);
+ setTimeout(function(){
+  if(S.k==="Kirim"){u.bal-=a;u.tx.unshift(T(S.to,-a))}
+  else{u.bal+=a;u.tx.unshift(T("Top up saldo",a))}
+  save();render();S.st="done";draw();
+ },d)}
 $("ov").addEventListener("click",function(e){var b=e.target.closest("[data-o]");if(!b)return;var o=b.getAttribute("data-o"),v=b.getAttribute("data-v");S.err="";
- if(o==="x")closeM();
+ if(S.st==="proc")return;if(o==="x")closeM();
  else if(o==="to"){S.st="to";S.a="";draw()}
  else if(o==="next"){var n=($("to").value||"").trim();S.to=n;if(n.length<2){S.err="Isi nama penerima.";draw();return}S.st="amt";draw()}
  else if(o==="pick"){S.to=v;S.st="amt";draw()}
@@ -581,7 +594,7 @@ $("ov").addEventListener("click",function(e){var b=e.target.closest("[data-o]");
  else if(o==="go")sendIt();
  else if(o==="copy"){try{navigator.clipboard.writeText(cur.card).then(function(){toast("Nomor kartu disalin")},function(){toast("Gagal menyalin")})}catch(x){toast("Gagal menyalin")}}});
 document.addEventListener("keydown",function(e){if($("ov").classList.contains("hide"))return;
- if(e.key==="Escape"){closeM();return}
+ if(S.st==="proc")return;if(e.key==="Escape"){closeM();return}
  if(S.st==="to"&&e.key==="Enter"){var b=document.querySelector('[data-o="next"]');if(b)b.click();return}
  if(S.st==="amt"||S.st==="tgt"){var m={"-":"−","*":"×","/":"÷","+":"+"};if(/^\d$/.test(e.key))press(e.key);else if(m[e.key])press(m[e.key]);else if(e.key==="Backspace")press("del");else if(e.key==="Enter"&&e.target.tagName!=="BUTTON")sendIt()}});
 $("fz").onclick=function(){cur.frozen=!cur.frozen;save();render();toast(cur.frozen?"Kartu dibekukan":"Kartu aktif kembali")};
@@ -593,8 +606,13 @@ $("fxb").addEventListener("click",function(){var a=parseInt($("fxa").value.repla
  if(a<10000){toast("Minimal tukar Rp 10.000");return}
  if(u.frozen){toast("Kartu dibekukan. Aktifkan di menu Kartu.");return}
  if(a>u.bal){toast("Saldo tidak cukup");return}
- var v=Math.round(a/R[c]*100)/100;u.bal-=a;u.fx[c]=Math.round(((u.fx[c]||0)+v)*100)/100;u.tx.unshift(T("Tukar ke "+c,-a,1));save();render();$("fxa").value="";fxc();
- toast("Berhasil tukar ke "+v.toLocaleString("id-ID",{minimumFractionDigits:2})+" "+c)});
+ var btn=$("fxb");btn.disabled=true;var ot=btn.textContent;btn.textContent="Memproses...";
+ var d=1000+Math.floor(Math.random()*2000);
+ setTimeout(function(){
+  btn.disabled=false;btn.textContent=ot;
+  var v=Math.round(a/R[c]*100)/100;u.bal-=a;u.fx[c]=Math.round(((u.fx[c]||0)+v)*100)/100;u.tx.unshift(T("Tukar ke "+c,-a,1));save();render();$("fxa").value="";fxc();
+  toast("Berhasil tukar ke "+v.toLocaleString("id-ID",{minimumFractionDigits:2})+" "+c);
+ },d)});
 var PV=[5000,10000,20000,50000,100000];
 function P(a){return a.map(function(v){return["Rp "+v.toLocaleString("id-ID"),v]})}
 var BC=[
@@ -604,7 +622,7 @@ var BC=[
  {k:"Pulsa",d:"Semua operator",f:"Nomor HP",fee:1000,p:[["Telkomsel",P(PV)],["Indosat",P(PV)],["XL",P(PV)],["Tri",P(PV)],["Smartfren",P(PV)]]}];
 function bamt(){var p=BC[S.c].p[S.p],o=p[1];return o?(S.o>=0?o[S.o][1]:0):(parseInt(String(S.a||"").replace(/\D/g,""),10)||0)}
 function sv(){var n=$("bn"),m=$("ba");if(n)S.no=n.value;if(m)S.a=m.value.replace(/\D/g,"")}
-function ik(n){var d={x:"M6 6l12 12M18 6L6 18",b:"M15 5l-7 7 7 7",r:"M9 5l7 7-7 7",c:"M5 12.5l4.5 4.5L19 7",d:"M21 5H9l-6 7 6 7h12zM15 9.5l-4 5M11 9.5l4 5"};return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="'+d[n]+'"/></svg>'}
+function ik(n){var d={x:"M6 6l12 12M18 6L6 18",b:"M15 5l-7 7 7 7",r:"M9 5l7 7-7 7",c:"M5 12.5l4.5 4.5L19 7",d:"M21 5H9l-6 7 6 7h12zM15 9.5l-4 5M11 9.5l4 5"};return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path class="'+(n==="c"?"ck-path":"")+'" d="'+d[n]+'"/></svg>'}
 function bh(t,b){return '<div class="ot"><button class="ob" data-b="'+b+'" aria-label="'+(b==="x"?"Tutup":"Kembali")+'">'+ik(b==="x"?"x":"b")+'</button><b>'+t+'</b><span></span></div>'}
 function drawB(){var h="",c=BC[S.c],p=c&&c.p[S.p];
  if(S.st==="cat"){h=bh("Bayar tagihan","x")+'<div class="bl2">'+BC.map(function(x,i){return '<button class="brw" data-b="cat" data-v="'+i+'"><span class="ic">'+x.k[0]+'</span><span class="nm">'+x.k+'<small>'+x.d+'</small></span><span>'+ik("r")+'</span></button>'}).join("")+'</div>'}
@@ -613,7 +631,8 @@ function drawB(){var h="",c=BC[S.c],p=c&&c.p[S.p];
   h=bh(lg(p[0],28)+esc(p[0]),"bk")+'<div class="bf"><label>'+c.f+'<input id="bn" value="'+esc(S.no)+'" inputmode="'+(sb?"email":"numeric")+'" autocomplete="off"></label>'
   +(o?'<p class="hint">'+(sb?"Pilih paket":"Pilih nominal")+'</p><div class="og">'+o.map(function(x,i){return '<button class="opt'+(i===S.o?" on":"")+'" data-b="opt" data-v="'+i+'">'+esc(x[0])+(sb?'<small>'+rp(x[1])+'</small>':"")+'</button>'}).join("")+'</div>':'<label>Jumlah tagihan (Rp)<input id="ba" value="'+(S.a?(+S.a).toLocaleString("id-ID"):"")+'" inputmode="numeric" placeholder="0" autocomplete="off"></label>')
   +'<div class="sm"><div><span>Tagihan</span><b id="s1">'+rp(am)+'</b></div><div><span>Biaya admin</span><b>'+rp(c.fee)+'</b></div><div class="tt"><span>Total</span><b id="s2">'+rp(tot)+'</b></div></div><p class="err">'+S.err+'</p></div><div class="cta"><button class="btn" data-b="pay" id="bp">Bayar '+rp(tot)+'</button></div>'}
- else{h='<div class="dn"><div class="ck">'+ik("c")+'</div><h2>Pembayaran berhasil</h2><p class="bigs">'+rp(S.t)+'</p><p class="hint">'+esc(S.r)+'</p>'+(S.tk?'<p class="tok">'+S.tk+'</p>':'')+'<p class="hint">Mode demo: belum terhubung ke penyedia asli.</p></div><div class="cta"><button class="btn" data-b="x">Selesai</button></div>'}
+ else if(S.st==="proc"){h='<div class="dn"><div class="spn"></div><h2>Memproses pembayaran...</h2><p class="bigs">'+rp(S.t)+'</p><p class="hint">'+esc(S.r)+'</p></div><div class="cta"><button class="btn" disabled style="opacity:.4">Memproses...</button></div>'}
+ else{h='<div class="dn"><div class="ck">'+ik("c")+'</div><div class="dn-content"><h2>Pembayaran berhasil</h2><p class="bigs">'+rp(S.t)+'</p><p class="hint">'+esc(S.r)+'</p>'+(S.tk?'<p class="tok">'+S.tk+'</p>':'')+'<p class="hint">Mode demo: belum terhubung ke penyedia asli.</p></div></div><div class="cta"><button class="btn" data-b="x">Selesai</button></div>'}
  $("ov").innerHTML='<div class="oc">'+h+'</div>'}
 function payB(){sv();var c=BC[S.c],p=c.p[S.p],am=bamt(),tot=am+c.fee,u=cur,no=(S.no||"").trim(),k=c.k;
  var ok=k==="Pulsa"?/^0\d{8,13}$/.test(no):k==="Layanan berbayar"?/^\S+@\S+\.\S+$/.test(no):/^\d{6,15}$/.test(no);
@@ -621,9 +640,14 @@ function payB(){sv();var c=BC[S.c],p=c.p[S.p],am=bamt(),tot=am+c.fee,u=cur,no=(S
  if(!am||(!p[1]&&am<10000)){S.err=p[1]?"Pilih dulu sebelum membayar.":"Minimal tagihan Rp 10.000.";return draw()}
  if(u.frozen){S.err="Kartu dibekukan. Aktifkan di menu Kartu.";return draw()}
  if(tot>u.bal){S.err="Saldo tidak cukup. Total "+rp(tot)+".";return draw()}
- u.bal-=tot;u.tx.unshift(T(p[0],-tot));S.t=tot;S.r=p[0]+", "+no;
+ S.t=tot;S.r=p[0]+", "+no;
  S.tk=p[0]==="Token PLN"?[0,1,2,3,4].map(function(){return String(Math.floor(Math.random()*9000)+1000)}).join(" "):"";
- S.st="done";save();render();draw()}
+ S.st="proc";draw();
+ var d=1000+Math.floor(Math.random()*2000);
+ setTimeout(function(){
+  u.bal-=tot;u.tx.unshift(T(p[0],-tot));
+  save();render();S.st="done";draw();
+ },d)}
 $("ov").addEventListener("click",function(e){var b=e.target.closest("[data-b]");if(!b||S.k!=="Bayar")return;var o=b.getAttribute("data-b"),v=+b.getAttribute("data-v");sv();S.err="";
  if(o==="x")closeM();
  else if(o==="cat"){S.c=v;S.st="prov";draw()}
@@ -680,21 +704,28 @@ function drawX(){var k=S.k,u=cur,h="",tb=k==="Tabung",a=ev(S.a||"");
  else if(S.st==="tgt"){h=bh(esc(S.gn),"nw")+'<div class="amb"><p class="hint">Berapa target tabunganmu?</p><div class="big'+(a?"":" z")+'"><small>Rp</small>'+(a?a.toLocaleString("id-ID"):"0")+'</div><p class="err">'+S.err+'</p></div><div class="kp">'+kpad()+'</div><div class="bot"><span class="chip2">Target tabungan</span><button class="wh" data-o="go"'+(a?"":" disabled")+'>Buat target</button></div>'}
  else if(S.st==="amt"){var g=tb?u.sv[S.i]:null,p=tb?null:PL[S.i],s=tb?null:(u.st[p[0]]||{a:0}),av=tb?g.a:s.a+acc(p),out=S.md==="out";
   h=bh(tb?esc(g.n):coin(p[0],24)+p[0],"bk")+'<div class="seg" style="align-self:center">'+[["in",tb?"Setor":"Stake"],["out","Tarik"]].map(function(t){return '<button class="'+(S.md===t[0]?"on":"")+'" data-b="md" data-v="'+t[0]+'">'+t[1]+'</button>'}).join("")+'</div><div class="amb"><div class="big'+(a?"":" z")+'"><small>Rp</small>'+(a?a.toLocaleString("id-ID"):"0")+'</div><p class="hint">'+(out?"Tersedia "+rp(av):"Saldo "+rp(u.bal))+'</p><p class="err">'+S.err+'</p></div><div class="kp">'+kpad()+'</div><div class="bot"><span class="chip2">'+(tb?"Tabungan":"Staking "+p[0])+'</span><button class="wh" data-o="go"'+(a?"":" disabled")+'>'+(out?"Tarik":tb?"Setor":"Stake")+'</button></div>'}
- else{h='<div class="dn"><div class="ck">'+ik("c")+'</div><h2>'+(tb?(S.md==="out"?"Berhasil ditarik":"Berhasil ditabung"):(S.md==="out"?"Staking ditarik":"Staking dimulai"))+'</h2><p class="bigs">'+rp(a)+'</p>'+(tb?'':'<p class="hint">Mode demo: belum terhubung ke jaringan kripto.</p>')+'</div><div class="cta"><button class="btn" data-b="x">Selesai</button></div>'}
+ else if(S.st==="proc"){h='<div class="dn"><div class="spn"></div><h2>Memproses...</h2><p class="bigs">'+rp(a)+'</p><p class="hint">'+(tb?(S.md==="out"?"Penarikan tabungan":"Setoran tabungan"):(S.md==="out"?"Penarikan staking":"Staking aset"))+'</p></div><div class="cta"><button class="btn" disabled style="opacity:.4">Memproses...</button></div>'}
+ else{h='<div class="dn"><div class="ck">'+ik("c")+'</div><div class="dn-content"><h2>'+(tb?(S.md==="out"?"Berhasil ditarik":"Berhasil ditabung"):(S.md==="out"?"Staking ditarik":"Staking dimulai"))+'</h2><p class="bigs">'+rp(a)+'</p>'+(tb?'':'<p class="hint">Mode demo: belum terhubung ke jaringan kripto.</p>')+'</div></div><div class="cta"><button class="btn" data-b="x">Selesai</button></div>'}
  $("ov").innerHTML='<div class="oc">'+h+'</div>'}
 function sendX(a){var u=cur,tb=S.k==="Tabung",out=S.md==="out",er=function(m){S.err=m;draw()};
  if(!a)return er("Masukkan jumlah dulu.");
  if(S.st==="tgt"){if(a<10000)return er("Target minimal Rp 10.000.");u.sv.push({n:S.gn,t:a,a:0});save();render();S.st="list";S.a="";S.gn="";draw();return}
  if(!out&&u.frozen)return er("Kartu dibekukan. Aktifkan di menu Kartu.");
  if(!out&&a>u.bal)return er("Saldo tidak cukup.");
- if(tb){var g=u.sv[S.i];
-  if(out){if(a>g.a)return er("Saldo tabungan hanya "+rp(g.a)+".");g.a-=a;u.bal+=a;u.tx.unshift(T("Tarik dari "+g.n,a,1))}
-  else{g.a+=a;u.bal-=a;u.tx.unshift(T("Tabung "+g.n,-a,1))}}
- else{var p=PL[S.i],s=u.st[p[0]]||{a:0,ts:Date.now()},c=acc(p);
-  if(out){if(a>s.a+c)return er("Yang bisa ditarik "+rp(s.a+c)+".");u.bal+=a;u.tx.unshift(T("Tarik staking "+p[0],a,1));s={a:s.a+c-a,ts:Date.now()}}
-  else{u.bal-=a;u.tx.unshift(T("Stake "+p[0],-a,1));s={a:s.a+c+a,ts:Date.now()}}
-  u.st[p[0]]=s}
- save();render();S.st="done";draw()}
+ if(tb){var g=u.sv[S.i];if(out&&a>g.a)return er("Saldo tabungan hanya "+rp(g.a)+".")}
+ else{var p=PL[S.i],s=u.st[p[0]]||{a:0,ts:Date.now()},c=acc(p);if(out&&a>s.a+c)return er("Yang bisa ditarik "+rp(s.a+c)+".")}
+ S.st="proc";draw();
+ var d=1000+Math.floor(Math.random()*2000);
+ setTimeout(function(){
+  if(tb){var g=u.sv[S.i];
+   if(out){g.a-=a;u.bal+=a;u.tx.unshift(T("Tarik dari "+g.n,a,1))}
+   else{g.a+=a;u.bal-=a;u.tx.unshift(T("Tabung "+g.n,-a,1))}}
+  else{var p=PL[S.i],s=u.st[p[0]]||{a:0,ts:Date.now()},c=acc(p);
+   if(out){u.bal+=a;u.tx.unshift(T("Tarik staking "+p[0],a,1));s={a:s.a+c-a,ts:Date.now()}}
+   else{u.bal-=a;u.tx.unshift(T("Stake "+p[0],-a,1));s={a:s.a+c+a,ts:Date.now()}}
+   u.st[p[0]]=s}
+  save();render();S.st="done";draw();
+ },d)}
 $("ov").addEventListener("click",function(e){var b=e.target.closest("[data-b]");if(!b||(S.k!=="Tabung"&&S.k!=="Staking"))return;var o=b.getAttribute("data-b"),v=b.getAttribute("data-v"),u=cur;S.err="";
  if(o==="x")closeM();
  else if(o==="bk"){S.st="list";S.a="";draw()}
@@ -723,7 +754,14 @@ $("bal").addEventListener("touchstart",function(e){if(e.target.closest("button")
 ["touchend","touchmove","touchcancel"].forEach(function(t){$("bal").addEventListener(t,function(){clearTimeout(hold);setTimeout(function(){held=false},400)},{passive:true})});
 $("bal").addEventListener("contextmenu",function(e){e.preventDefault()});
 $("amt").addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();pgNext()}});
-$("fxsb").onclick=function(){var u=cur,c=pages()[PG];if(!c||c==="IDR")return;var r=Math.floor(u.fx[c]*R[c]);u.fx[c]=0;u.bal+=r;u.tx.unshift(T("Jual "+c,r,1));PG=0;save();render();toast("Dijual ke "+rp(r))};
+$("fxsb").onclick=function(){var u=cur,c=pages()[PG];if(!c||c==="IDR")return;
+ var btn=$("fxsb");btn.disabled=true;var ot=btn.textContent;btn.textContent="Memproses...";
+ var d=1000+Math.floor(Math.random()*2000);
+ setTimeout(function(){
+  btn.disabled=false;btn.textContent=ot;
+  var r=Math.floor(u.fx[c]*R[c]);u.fx[c]=0;u.bal+=r;u.tx.unshift(T("Jual "+c,r,1));PG=0;save();render();
+  toast("Dijual ke "+rp(r));
+ },d)};
 var SHOWN=false;
 $("kvb").onclick=function(){SHOWN=!SHOWN;render()};
 $("kcb").onclick=function(){try{navigator.clipboard.writeText(cur.card).then(function(){toast("Nomor kartu disalin")},function(){toast("Gagal menyalin")})}catch(x){toast("Gagal menyalin")}};
